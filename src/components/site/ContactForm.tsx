@@ -14,6 +14,16 @@ const schema = z.object({
 });
 type Data = z.infer<typeof schema>;
 
+function L({ n, label, errors, children }: { n: keyof Data; label: string; errors: Partial<Record<keyof Data, string>>; children: React.ReactNode }) {
+  return (
+    <label className="block text-sm font-semibold">
+      {label}
+      {children}
+      {errors[n] && <span className="mt-1 block text-xs font-medium text-destructive">{errors[n]}</span>}
+    </label>
+  );
+}
+
 const field = "mt-2 w-full border border-input bg-background px-4 py-3 text-sm text-navy outline-none transition-colors focus:border-gold";
 
 function buildMessage(d: Data) {
@@ -38,14 +48,6 @@ export function ContactSection() {
     setSent(r.data);
     window.open(waHref(buildMessage(r.data)), "_blank", "noopener");
   }
-
-  const L = ({ n, label, children }: { n: keyof Data; label: string; children: React.ReactNode }) => (
-    <label className="block text-sm font-semibold">
-      {label}
-      {children}
-      {errors[n] && <span className="mt-1 block text-xs font-medium text-destructive">{errors[n]}</span>}
-    </label>
-  );
 
   return (
     <section id="contact" className="bg-card">
@@ -80,17 +82,17 @@ export function ContactSection() {
             </div>
           ) : (
             <form onSubmit={onSubmit} noValidate className="grid gap-6 sm:grid-cols-2">
-              <L n="name" label="Full name"><input name="name" autoComplete="name" className={field} /></L>
-              <L n="phone" label="Phone number"><input name="phone" type="tel" autoComplete="tel" className={field} /></L>
-              <L n="email" label="Email address"><input name="email" type="email" autoComplete="email" className={field} /></L>
-              <L n="service" label="Service required">
+              <L errors={errors} n="name" label="Full name"><input name="name" autoComplete="name" className={field} /></L>
+              <L errors={errors} n="phone" label="Phone number"><input name="phone" type="tel" autoComplete="tel" className={field} /></L>
+              <L errors={errors} n="email" label="Email address"><input name="email" type="email" autoComplete="email" className={field} /></L>
+              <L errors={errors} n="service" label="Service required">
                 <select name="service" defaultValue="" className={field}>
                   <option value="" disabled>Select a service</option>
                   {SERVICE_OPTIONS.map((s) => <option key={s}>{s}</option>)}
                 </select>
               </L>
-              <div className="sm:col-span-2"><L n="location" label="Location"><input name="location" placeholder="e.g. Athlone, Cape Town" className={field} /></L></div>
-              <div className="sm:col-span-2"><L n="description" label="Description of the job"><textarea name="description" rows={5} className={field} /></L></div>
+              <div className="sm:col-span-2"><L errors={errors} n="location" label="Location"><input name="location" placeholder="e.g. Athlone, Cape Town" className={field} /></L></div>
+              <div className="sm:col-span-2"><L errors={errors} n="description" label="Description of the job"><textarea name="description" rows={5} className={field} /></L></div>
               <button type="submit" className="bg-navy px-8 py-4 text-sm font-semibold text-navy-foreground transition-colors hover:bg-navy-deep sm:col-span-2 sm:justify-self-start">Request a Quote</button>
             </form>
           )}
