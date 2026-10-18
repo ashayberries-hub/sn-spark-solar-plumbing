@@ -1,18 +1,40 @@
-# Welcome to your Lovable project
+# SN Electrical & Plumbing
 
-This project was built with [Lovable](https://lovable.dev).
+Website for SN Electrical and Plumbing — electrical, plumbing, and solar services
+in Athlone, Cape Town, South Africa.
 
-## Build with Lovable
+The site presents the business's services, explains how a quote works, and makes it
+easy for customers to reach the business by phone, WhatsApp, or email.
 
-Open your project in the [Lovable editor](https://lovable.dev) and keep building.
+## Pages
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
-- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
+- `/` — home: services overview, why choose us, the four-step quote process, enquiry form
+- `/electrical` — electrical services
+- `/plumbing` — plumbing services
+- `/solar` — solar and backup power services, with a gallery of recent installations
+- `/about` — about the business
+- `/contact` — enquiry form and direct contact details
 
-## Development
+All business details (phone number, email, address, service list) live in one file:
+`src/lib/site.ts`. Edit that file to update contact information or the services
+advertised across the whole site.
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+## Contact
+
+- Phone / WhatsApp: 068 219 4245
+- Email: snelectricalandplumbing@gmail.com
+- Address: 6 St Mauri Street, Athlone, Cape Town, South Africa
+
+## Tech stack
+
+- [TanStack Start](https://tanstack.com/start) (React 19, file-based routing under `src/routes`)
+- TypeScript
+- Tailwind CSS v4 (design tokens in `src/styles.css`)
+- Vite
+
+## Running locally
+
+You need Node.js and npm.
 
 ```sh
 git clone <this-repository-url>
@@ -21,9 +43,17 @@ npm i
 npm run dev
 ```
 
-## Built with
+The site is then served at the address the dev server prints in your terminal.
 
-- TanStack Start
-- TypeScript
-- React
-- Tailwind CSS
+## Tests
+
+```sh
+npx vitest run
+```
+
+## Editing content
+
+- Service descriptions and lists: `src/lib/site.ts`
+- Page copy and section layout: `src/routes/*.tsx` and `src/components/site/`
+- Photos of completed work: `src/assets/` (uploaded job photos are referenced from `src/lib/site.ts`)
+- Colours, fonts, and spacing: `src/styles.css`
