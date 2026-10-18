@@ -1,6 +1,7 @@
-import { useState, type FormEvent } from "react";
+import { useId, useState, type FormEvent, type ReactNode } from "react";
 import { z } from "zod";
 import { Phone, Mail, MapPin } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { SITE, SERVICE_OPTIONS, telHref, mailHref, waHref } from "@/lib/site";
 import { WhatsAppIcon, FacebookIcon, InstagramIcon } from "./Layout";
 
@@ -14,12 +15,12 @@ const schema = z.object({
 });
 type Data = z.infer<typeof schema>;
 
-function L({ n, label, errors, children }: { n: keyof Data; label: string; errors: Partial<Record<keyof Data, string>>; children: React.ReactNode }) {
+function L({ n, label, errors, children }: { n: keyof Data; label: string; errors: Partial<Record<keyof Data, string>>; children: ReactNode }) {
   return (
     <label className="block text-sm font-semibold">
-      {label}
+      <span>{label}</span>
       {children}
-      {errors[n] && <span className="mt-1 block text-xs font-medium text-destructive">{errors[n]}</span>}
+      {errors[n] && <span aria-hidden="true" className="mt-1 block text-xs font-medium text-destructive">{errors[n]}</span>}
     </label>
   );
 }
@@ -31,6 +32,7 @@ function buildMessage(d: Data) {
 }
 
 export function ContactSection() {
+  const formId = useId();
   const [errors, setErrors] = useState<Partial<Record<keyof Data, string>>>({});
   const [sent, setSent] = useState<Data | null>(null);
 
@@ -46,7 +48,7 @@ export function ContactSection() {
     }
     setErrors({});
     setSent(r.data);
-    window.open(waHref(buildMessage(r.data)), "_blank", "noopener");
+    window.open(waHref(buildMessage(r.data)), "_blank", "noopener,noreferrer");
   }
 
   return (
@@ -73,27 +75,28 @@ export function ContactSection() {
             <div className="py-10">
               <p className="eyebrow">Thank you</p>
               <h3 className="mt-3 text-2xl font-extrabold">Your enquiry is ready to send.</h3>
-              <p className="mt-3 text-muted-foreground">WhatsApp has opened with your details filled in — just press send. Prefer email? Use the button below.</p>
+              <p className="mt-3 text-muted-foreground">Send your details in WhatsApp to complete your enquiry. If it didn't open, use the button below. Prefer email? You can send it that way instead.</p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <a href={waHref(buildMessage(sent))} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-whatsapp px-5 py-3 text-sm font-semibold text-navy-foreground"><WhatsAppIcon />Open WhatsApp</a>
                 <a href={`${mailHref}?subject=${encodeURIComponent("Quote request: " + sent.service)}&body=${encodeURIComponent(buildMessage(sent))}`} className="inline-flex items-center gap-2 border border-navy px-5 py-3 text-sm font-semibold"><Mail className="h-4 w-4" />Send by email</a>
-                <button onClick={() => setSent(null)} className="px-5 py-3 text-sm font-semibold text-muted-foreground underline">New enquiry</button>
+                <Button variant="link" onClick={() => setSent(null)} className="h-auto px-5 py-3 text-sm font-semibold text-muted-foreground underline">New enquiry</Button>
               </div>
             </div>
           ) : (
             <form onSubmit={onSubmit} noValidate className="grid gap-6 sm:grid-cols-2">
-              <L errors={errors} n="name" label="Full name"><input name="name" autoComplete="name" className={field} /></L>
-              <L errors={errors} n="phone" label="Phone number"><input name="phone" type="tel" autoComplete="tel" className={field} /></L>
-              <L errors={errors} n="email" label="Email address"><input name="email" type="email" autoComplete="email" className={field} /></L>
+              <L errors={errors} n="name" label="Full name"><input name="name" aria-label="Full name" autoComplete="name" aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? `${formId}-errors` : undefined} className={field} /></L>
+              <L errors={errors} n="phone" label="Phone number"><input name="phone" aria-label="Phone number" aria-invalid={Boolean(errors.phone)} type="tel" autoComplete="tel" className={field} /></L>
+              <L errors={errors} n="email" label="Email address"><input name="email" aria-label="Email address" aria-invalid={Boolean(errors.email)} type="email" autoComplete="email" className={field} /></L>
               <L errors={errors} n="service" label="Service required">
-                <select name="service" defaultValue="" className={field}>
+                <select name="service" aria-label="Service required" aria-invalid={Boolean(errors.service)} defaultValue="" className={field}>
                   <option value="" disabled>Select a service</option>
                   {SERVICE_OPTIONS.map((s) => <option key={s}>{s}</option>)}
                 </select>
               </L>
-              <div className="sm:col-span-2"><L errors={errors} n="location" label="Location"><input name="location" placeholder="e.g. Athlone, Cape Town" className={field} /></L></div>
-              <div className="sm:col-span-2"><L errors={errors} n="description" label="Description of the job"><textarea name="description" rows={5} className={field} /></L></div>
-              <button type="submit" className="bg-navy px-8 py-4 text-sm font-semibold text-navy-foreground transition-colors hover:bg-navy-deep sm:col-span-2 sm:justify-self-start">Request a Quote</button>
+              <div className="sm:col-span-2"><L errors={errors} n="location" label="Location"><input name="location" aria-label="Location" aria-invalid={Boolean(errors.location)} placeholder="e.g. Athlone, Cape Town" className={field} /></L></div>
+              <div className="sm:col-span-2"><L errors={errors} n="description" label="Description of the job"><textarea name="description" aria-label="Description of the job" aria-invalid={Boolean(errors.description)} rows={5} className={field} /></L></div>
+              {Object.keys(errors).length > 0 && <p id={`${formId}-errors`} role="alert" className="text-sm text-destructive sm:col-span-2">Please check the highlighted fields: {Object.values(errors).join(". ")}.</p>}
+              <Button type="submit" className="h-auto rounded-none bg-navy px-8 py-4 text-sm font-semibold text-navy-foreground shadow-none transition-colors hover:bg-navy-deep sm:col-span-2 sm:justify-self-start">Request a Quote</Button>
             </form>
           )}
         </div>
