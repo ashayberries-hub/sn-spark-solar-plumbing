@@ -57,3 +57,5 @@ npx vitest run
 - Page copy and section layout: `src/routes/*.tsx` and `src/components/site/`
 - Photos of completed work: `src/assets/` (uploaded job photos are referenced from `src/lib/site.ts`)
 - Colours, fonts, and spacing: `src/styles.css`
+
+This repository is synced from Lovable. Changes made in the Lovable editor are committed here automatically.
