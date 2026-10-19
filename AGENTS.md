@@ -8,3 +8,6 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+## Photo hosting
+- Resolve uploaded photo pointers through `src/lib/photos.ts` using their Lovable serving origin; third-party hosts do not serve Lovable's relative asset endpoint.
