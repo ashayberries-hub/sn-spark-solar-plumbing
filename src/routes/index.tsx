@@ -3,8 +3,7 @@ import { SiteLayout, WhatsAppIcon } from "@/components/site/Layout";
 import { ServiceBlock, WhyUs, Process } from "@/components/site/Sections";
 import { ContactSection } from "@/components/site/ContactForm";
 import { waHref } from "@/lib/site";
-import inverters from "@/assets/inverters.jpg.asset.json";
-import solarRoof from "@/assets/solar-roof.jpg.asset.json";
+import { PHOTOS } from "@/lib/photos";
 import electrical from "@/assets/electrical.jpg";
 import plumbing from "@/assets/plumbing.jpg";
 
@@ -20,6 +19,8 @@ export const Route = createFileRoute("/")({
       { property: "og:description", content: DESC },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:image", content: PHOTOS.inverters },
+      { name: "twitter:image", content: PHOTOS.inverters },
     ],
     links: [{ rel: "canonical", href: "/" }],
   }),
@@ -47,7 +48,7 @@ function Index() {
             </div>
           </div>
           <div className="relative">
-            <img src={inverters.url} alt="Solar inverter and battery backup installation by SN Electrical and Plumbing" className="aspect-[4/5] w-full object-cover lg:aspect-[5/6]" />
+            <img src={PHOTOS.inverters} alt="Solar inverter and battery backup installation by SN Electrical and Plumbing" className="aspect-[4/5] w-full object-cover lg:aspect-[5/6]" />
             <div className="absolute -bottom-6 -left-6 hidden w-56 bg-navy p-6 text-navy-foreground md:block">
               <p className="eyebrow">Recent work</p>
               <p className="mt-2 text-sm leading-relaxed">Dual inverter solar backup installation.</p>
@@ -72,7 +73,7 @@ function Index() {
         <h2 className="mt-4 max-w-2xl text-3xl font-extrabold tracking-tight md:text-5xl">Three trades, one dependable team.</h2>
       </div>
       <ServiceBlock k="electrical" img={electrical} intro="Safe, tidy electrical work for homes and businesses." />
-      <ServiceBlock k="solar" img={solarRoof.url} intro="Keep the power on with solar and backup systems." reverse tone="muted" />
+      <ServiceBlock k="solar" img={PHOTOS.solarRoof} intro="Keep the power on with solar and backup systems." reverse tone="muted" />
       <ServiceBlock k="plumbing" img={plumbing} intro="Dependable plumbing, from geysers to new installations." />
       <WhyUs />
       <Process />
